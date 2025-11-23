@@ -1,6 +1,6 @@
 {
   "name": "mongo-schema-drift",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Detect schema drift in MongoDB collections - infer schemas and compare across environments.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,6 @@
   ],
   "author": "Abhijeet Kumar Singh <kumar.abhijeetsingh20@gmail.com>",
   "license": "MIT",
-
   "repository": {
     "type": "git",
     "url": "https://github.com/abhinetics/mongo-schema-drift.git"
@@ -38,7 +37,6 @@
   "bugs": {
     "url": "https://github.com/abhinetics/mongo-schema-drift/issues"
   },
-
   "dependencies": {
     "mongodb": "^5.8.0",
     "yargs": "^17.7.2"
