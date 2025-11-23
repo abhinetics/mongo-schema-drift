@@ -1,10 +1,11 @@
 import { InferredSchema, PrimitiveType } from "../types";
 
-function inferPrimitiveType(value: any): PrimitiveType {
+function inferPrimitiveType(value: unknown): PrimitiveType {
   if (value === null) return "null";
   if (value === undefined) return "undefined";
   if (Array.isArray(value)) return "array";
   if (value instanceof Date) return "date";
+
   const t = typeof value;
   if (t === "string") return "string";
   if (t === "number") return "number";
@@ -18,34 +19,38 @@ function addType(schema: InferredSchema, path: string, t: PrimitiveType) {
   schema[path].add(t);
 }
 
-function walk(obj: any, schema: InferredSchema, prefix = "") {
+function walk(obj: unknown, schema: InferredSchema, prefix = ""): void {
   if (!obj || typeof obj !== "object") return;
-  for (const key of Object.keys(obj)) {
-    const val = obj[key];
+
+  const record = obj as Record<string, unknown>;
+
+  for (const key of Object.keys(record)) {
+    const val = record[key];
     const path = prefix ? `${prefix}.${key}` : key;
+
     const pType = inferPrimitiveType(val);
     addType(schema, path, pType);
+
     if (pType === "object") walk(val, schema, path);
-    if (pType === "array") {
-      // record the array type itself, then inspect elements
-      if (Array.isArray(val)) {
-        for (const it of val) {
-          if (it && typeof it === "object") {
-            // for array of objects, inspect nested paths: use path[] to denote element structure
-            walk(it, schema, `${path}[]`);
-          } else {
-            addType(schema, `${path}[]`, inferPrimitiveType(it));
-          }
+
+    if (pType === "array" && Array.isArray(val)) {
+      for (const item of val) {
+        if (item && typeof item === "object") {
+          walk(item, schema, `${path}[]`);
+        } else {
+          addType(schema, `${path}[]`, inferPrimitiveType(item));
         }
       }
     }
   }
 }
 
-export function inferSchemaFromDocuments(documents: any[]): InferredSchema {
+export function inferSchemaFromDocuments(documents: unknown[]): InferredSchema {
   const schema: InferredSchema = {};
+
   for (const doc of documents) {
     walk(doc, schema);
   }
+
   return schema;
 }

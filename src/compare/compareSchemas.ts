@@ -1,8 +1,9 @@
 import { InferredSchema, CompareReport } from "../types";
 
-function setToArray(s?: Set<any>) {
+function setToArray<T>(s?: Set<T>): T[] {
   return s ? Array.from(s).sort() : [];
 }
+
 
 export function compareSchemas(source: InferredSchema, target: InferredSchema): CompareReport {
   const sourceKeys = new Set(Object.keys(source));
