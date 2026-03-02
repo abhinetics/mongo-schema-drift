@@ -77,7 +77,7 @@ Only reads data. Never modifies your database.
 npm install mongo-schema-drift
 ```
 
-Or use globally:
+Or use it globally:
 
 ```bash
 npm install -g mongo-schema-drift
